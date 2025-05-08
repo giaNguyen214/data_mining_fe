@@ -1,0 +1,122 @@
+.footer {
+    width: 100%;
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+    font-family: 'Poppins', sans-serif;
+    padding: 50px 70px;
+    background-color: #EAE5D9;
+    background-image: none;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: nowrap;
+    box-sizing: border-box;
+    position: relative;
+    z-index: 20;
+  }
+  
+
+/* HỖ TRỢ KHÁCH HÀNG */
+.footer-section {
+  flex: 1 1 300px;
+  margin: 10px;
+}
+.footer-section h3 {
+  font-size: 28px;
+  color: #F30041;
+  margin-bottom: 10px;
+  font-weight: bold;
+  width: 320px;
+}
+.footer-section ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.footer-section li {
+  margin-bottom: 12px;
+  font-size: 20px;
+  font-weight: 600;
+}
+.footer-section a {
+  text-decoration: none;
+  color: #355F2E;
+  transition: color 0.3s;
+}
+.footer-section a:hover {
+  color: #F30041;
+}
+
+
+
+/* CÔNG TY */
+.footer-section-2 {
+  flex: 1 1 300px;
+  margin-left: 70px;
+  margin-top: 10px;
+}
+.footer-section-2 h3 {
+  font-size: 28px;
+  color: #F30041;
+  margin-bottom: 10px;
+  font-weight: bold;
+  width: 150px;
+}
+.footer-section-2 ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.footer-section-2 li {
+  margin-bottom: 12px;
+  font-size: 20px;
+  font-weight: 600;
+}
+.footer-section-2 a {
+  text-decoration: none;
+  color: #355F2E;
+  transition: color 0.3s;
+}
+.footer-section-2 a:hover {
+  color: #F30041;
+}
+  
+
+/* LOGO */
+.footer-logo-wrapper {
+  flex: 1 1 300px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0px;
+}
+.footer-logo {
+  width: 200px;
+  object-fit: contain;
+}
+
+
+/* CONTACT */
+.footer-contact {
+  flex: 1 1 300px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin: 10px;
+}
+.footer-contact-item {
+  display: flex;
+  align-items: center;
+  font-size: 20px;
+  font-family: 'Itim', cursive;
+  font-weight: bold;
+  color: #A28B75;
+  width: 240px;
+}
+.footer-contact-item img {
+  width: 30px;
+  height: 30px;
+  object-fit: contain;
+  margin-right: 10px;
+  filter: brightness(0) saturate(100%) invert(34%) sepia(15%) saturate(597%) hue-rotate(356deg) brightness(91%) contrast(87%);
+}
