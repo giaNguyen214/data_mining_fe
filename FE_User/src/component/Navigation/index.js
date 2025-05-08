@@ -3,51 +3,71 @@ import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import "./Navigation.css";
 import logoImage from '../../assets/img/LOGO.png';
-
+import axios from 'axios';
 
 const Navigation = ({ setProducts, setFilteredProducts, setSelectedCategory }) => {
   const navigate = useNavigate(); // HÀM ĐIỀU HƯỚNG.
-  
-  const [searchTerm, setSearchTerm] = useState("");
-  console.log (searchTerm);
-  
+  const [searchTerm, setSearchTerm] = useState(""); {/* HÀM XỬ LÝ Ô TÌM KIẾM. */}
 
-
-
-  const handleSearch = async () => {
-    if (!searchTerm.trim()) return;
+  const handleSearch = async (keyword) => {
     try {
-        console.log(searchTerm);
-        // const res = await fetch(`https://ea46-2403-e200-16d-c177-a50a-6fef-b48d-afd9.ngrok-free.app/users/search?query=${encodeURIComponent(`"${searchTerm}"`)}`);
-        const res = await fetch(`https://ea46-2403-e200-16d-c177-a50a-6fef-b48d-afd9.ngrok-free.app/users/search?query=${encodeURIComponent(`"${searchTerm}"`)}`, {
-          method: 'GET',
-          // credentials: 'include', // Nếu không dùng cookie/session, bỏ dòng này
-          headers: {
-            'Content-Type': 'application/json'
+      const res = await axios.get('http://localhost:3001/users/search', {
+        params: { query: keyword },
+      });
+      const data = res.data;
+
+      if (data && data.products) {
+        setProducts(data.products);
+      }
+      else {
+        const fakeProducts = [
+          {
+            product_brand: "Test Brand",
+            product_id: 999001,
+            product_image: "https://via.placeholder.com/280x280?text=Fake+Book+1",
+            product_name: "Cuốn Sách Bí Ẩn Không Tồn Tại - Tác giả Ảo",
+            product_price: 123000,
+            product_type: "Sách Ảo"
+          },
+          {
+            product_brand: "Fake Wear",
+            product_id: 999002,
+            product_image: "https://via.placeholder.com/280x280?text=Fake+Glasses",
+            product_name: "Kính Ảo Chống Ánh Sáng Mặt Trăng",
+            product_price: 99000,
+            product_type: "Phụ kiện Ảo"
+          },
+          {
+            product_brand: "Dream Co.",
+            product_id: 999003,
+            product_image: "https://via.placeholder.com/280x280?text=Fake+Hat",
+            product_name: "Nón Lưỡi Trai Bay Lên Trời",
+            product_price: 45000,
+            product_type: "Phụ kiện Ảo"
           }
-        })
-      
-        console.log("res: ", res)
-        
-
-
-        const raw = await res.text()
-        console.log(raw)
-
-        const data = await res.json();
-        const top20 = data.slice(0, 20);
-        setProducts(top20);
-        setFilteredProducts(top20);
-        setSelectedCategory(null); 
-        window.scrollTo({ top: 500, behavior: "smooth" });
+        ];
+        setProducts(fakeProducts);
+      }
     } catch (error) {
-        console.error("Lỗi khi tìm kiếm sản phẩm:", error);
+      console.error("Search error:", error);
+      const fallbackFakeProducts = [
+        {
+          product_brand: "Emergency Brand",
+          product_id: 999004,
+          product_image: "https://via.placeholder.com/280x280?text=Error+Fallback",
+          product_name: "Sản phẩm dự phòng khi lỗi API",
+          product_price: 111000,
+          product_type: "Khẩn cấp"
+        }
+      ];
+      setProducts(fallbackFakeProducts);
     }
+    navigate('/');
   };
 
   const handleSearchKeyDown = (e) => {
     if (e.key === "Enter") {
-      handleSearch();
+      handleSearch(searchTerm);
     }
   };
 
@@ -71,7 +91,7 @@ const Navigation = ({ setProducts, setFilteredProducts, setSelectedCategory }) =
           onChange={(e) => setSearchTerm(e.target.value)}
           onKeyDown={handleSearchKeyDown}
         />
-        <button onClick={handleSearch}>Tìm kiếm</button>
+        <button onClick={() => handleSearch(searchTerm)}>Tìm kiếm</button>
       </div>
 
 

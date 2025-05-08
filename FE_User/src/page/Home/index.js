@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Home.css";
+import { useOutletContext } from "react-router-dom";
+
 
 // BANNER
 import banner1 from "../../assets/img/Banner1.png";
@@ -23,22 +25,21 @@ import product1 from "../../assets/img/product1.png";
 
 const Home = () => {
     const navigate = useNavigate(); // HÀM ĐIỀU HƯỚNG.
-    const [products, setProducts] = useState([]); // HÀM TRẠNG THÁI SẢN PHẨM.
-    const [filteredProducts, setFilteredProducts] = useState([]);
-    const [selectedCategory, setSelectedCategory] = useState(null);
     const [banners, setBanners] = useState([banner1, banner2, banner3]); // HÀM TRẠNG THÁI BANNER.
-    // const [products, setProducts] = useState([
-    //     { id: 1, name: "Áo Thun Nữ Basic", image: product1, price: "129.000đ" },
-    //     { id: 2, name: "Túi Đeo Vai Da PU", image: product2, price: "249.000đ" },
-    //     { id: 3, name: "Giày Thể Thao Trắng", image: product3, price: "399.000đ" },
-    //     { id: 4, name: "Đầm Xòe Hoa Nhí", image: product4, price: "199.000đ" },
-    // ]);
+
     const handleCategoryFilter = (categoryName) => {
         setSelectedCategory(categoryName);
         const filtered = products.filter(p => p.category === categoryName);
         setFilteredProducts(filtered);
     };
 
+    const {
+        products, setProducts,
+        filteredProducts, setFilteredProducts,
+        selectedCategory, setSelectedCategory,
+        searchTerm, setSearchTerm // ✅ now available here
+    } = useOutletContext();
+      
     {/* HÀM DANH MỤC. */}
     const categories = [
         { name: "Thời trang nữ", image: category1, link: "/products/thoi-trang-nu" },
@@ -55,13 +56,11 @@ const Home = () => {
     const [hasMore, setHasMore] = useState(true);
     const [showScrollToTop, setShowScrollToTop] = useState(false); //HÀM TRẠNG THÁI NÚT CUỘN LÊN ĐẦU TRANG.
 
-    const [searchTerm] = useState("");
-
     {/* HÀM FETCH API. */}
     const fetchProducts = async (pageNumber) => {
         setIsLoading(true);
         try {
-            const res = await fetch(`https://ea46-2403-e200-16d-c177-a50a-6fef-b48d-afd9.ngrok-free.app/users/search?query=${encodeURIComponent(searchTerm)}?page=${pageNumber}`);
+            const res = await fetch(`http://localhost:3001/users/search?query=${encodeURIComponent(searchTerm)}&page=${pageNumber}`);
             const data = await res.json();
             if (data.length === 0) {
                 setHasMore(false);
@@ -77,8 +76,9 @@ const Home = () => {
     };
 
     useEffect(() => {
-        fetchProducts(page);
-    }, []);
+        fetchProducts(1, searchTerm);  // Gọi lại fetch khi từ khóa tìm kiếm thay đổi
+        setProducts([]); // reset sản phẩm khi tìm kiếm mới
+      }, [searchTerm]);         
 
     {/* HÀM HIỆU ỨNG CHO BANNER. */}
     useEffect(() => {
@@ -149,25 +149,22 @@ const Home = () => {
 
 
             {/* DANH SÁCH CÁC SẢN PHẨM */}
-            <div className="product-container">
+            <div className="product-list-container">
+            {products.length > 0 ? (
                 <div className="product-grid">
-                    {(selectedCategory ? filteredProducts : products).map((product) => (
-                        <div
-                            key={product.id}
-                            className="product-card"
-                            onClick={() => navigate(`/product/${product.id}`, { state: product })}
-                            style={{ cursor: "pointer" }}
-                        >
-                            <img src={product.image} alt={product.name} />
-                            <div>{product.name}</div>
-                            <div>{product.price}</div>
-                        </div>
-                    ))}
+                {products.map(product => (
+                    <div key={product.product_id} className="product-card">
+                    <img src={product.product_image} alt={product.product_name} />
+                    <h4>{product.product_name}</h4>
+                    <p>{product.product_price.toLocaleString()}₫</p>
+                    </div>
+                ))}
                 </div>
-                {products.length === 0 && (
-                    <div className="loading-text">Không có sản phẩm nào. Hãy tìm kiếm tên sản phẩm.</div>
-                )}
+            ) : (
+                <p>Không tìm thấy sản phẩm phù hợp.</p>
+            )}
             </div>
+
 
 
             {/* NÚT CUỘN LÊN */}
