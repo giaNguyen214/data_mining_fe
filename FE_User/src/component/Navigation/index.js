@@ -5,71 +5,8 @@ import "./Navigation.css";
 import logoImage from '../../assets/img/LOGO.png';
 import axios from 'axios';
 
-const Navigation = ({ setProducts, setFilteredProducts, setSelectedCategory }) => {
+const Navigation = ({ setProducts, setFilteredProducts, setSelectedCategory, searchTerm, setSearchTerm, handleSearch }) => {
   const navigate = useNavigate(); // HÀM ĐIỀU HƯỚNG.
-  const [searchTerm, setSearchTerm] = useState(""); {/* HÀM XỬ LÝ Ô TÌM KIẾM. */}
-
-  const handleSearch = async (keyword) => {
-    try {
-      const res = await axios.get('http://localhost:3001/users/search', {
-        params: { query: keyword },
-      });
-      const data = res.data;
-
-      if (data && data.products) {
-        setProducts(data.products);
-      }
-      else {
-        const fakeProducts = [
-          {
-            product_brand: "Test Brand",
-            product_id: 999001,
-            product_image: "https://via.placeholder.com/280x280?text=Fake+Book+1",
-            product_name: "Cuốn Sách Bí Ẩn Không Tồn Tại - Tác giả Ảo",
-            product_price: 123000,
-            product_type: "Sách Ảo"
-          },
-          {
-            product_brand: "Fake Wear",
-            product_id: 999002,
-            product_image: "https://via.placeholder.com/280x280?text=Fake+Glasses",
-            product_name: "Kính Ảo Chống Ánh Sáng Mặt Trăng",
-            product_price: 99000,
-            product_type: "Phụ kiện Ảo"
-          },
-          {
-            product_brand: "Dream Co.",
-            product_id: 999003,
-            product_image: "https://via.placeholder.com/280x280?text=Fake+Hat",
-            product_name: "Nón Lưỡi Trai Bay Lên Trời",
-            product_price: 45000,
-            product_type: "Phụ kiện Ảo"
-          }
-        ];
-        setProducts(fakeProducts);
-      }
-    } catch (error) {
-      console.error("Search error:", error);
-      const fallbackFakeProducts = [
-        {
-          product_brand: "Emergency Brand",
-          product_id: 999004,
-          product_image: "https://via.placeholder.com/280x280?text=Error+Fallback",
-          product_name: "Sản phẩm dự phòng khi lỗi API",
-          product_price: 111000,
-          product_type: "Khẩn cấp"
-        }
-      ];
-      setProducts(fallbackFakeProducts);
-    }
-    navigate('/');
-  };
-
-  const handleSearchKeyDown = (e) => {
-    if (e.key === "Enter") {
-      handleSearch(searchTerm);
-    }
-  };
 
   return (
     <nav className="navigation">
@@ -89,9 +26,9 @@ const Navigation = ({ setProducts, setFilteredProducts, setSelectedCategory }) =
           placeholder="Hãy nhập thông tin sản phẩm mong muốn..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          onKeyDown={handleSearchKeyDown}
+          // onKeyDown={handleSearchKeyDown}
         />
-        <button onClick={() => handleSearch(searchTerm)}>Tìm kiếm</button>
+        <button className="search-button" onClick={() => handleSearch(searchTerm)}>Tìm kiếm</button>
       </div>
 
 

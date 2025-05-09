@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Home.css";
 import { useOutletContext } from "react-router-dom";
-
+import axios from 'axios';
 
 // BANNER
 import banner1 from "../../assets/img/Banner1.png";
@@ -37,7 +37,8 @@ const Home = () => {
         products, setProducts,
         filteredProducts, setFilteredProducts,
         selectedCategory, setSelectedCategory,
-        searchTerm, setSearchTerm // ✅ now available here
+        searchTerm, setSearchTerm,
+        handleSearch
     } = useOutletContext();
       
     {/* HÀM DANH MỤC. */}
@@ -56,16 +57,17 @@ const Home = () => {
     const [hasMore, setHasMore] = useState(true);
     const [showScrollToTop, setShowScrollToTop] = useState(false); //HÀM TRẠNG THÁI NÚT CUỘN LÊN ĐẦU TRANG.
 
+
     {/* HÀM FETCH API. */}
     const fetchProducts = async (pageNumber) => {
         setIsLoading(true);
         try {
-            const res = await fetch(`http://localhost:3001/users/search?query=${encodeURIComponent(searchTerm)}&page=${pageNumber}`);
+            const res = await fetch(`https://ea46-2403-e200-16d-c177-a50a-6fef-b48d-afd9.ngrok-free.app/users/sort&page=${pageNumber}`);
             const data = await res.json();
             if (data.length === 0) {
                 setHasMore(false);
             } else {
-                setProducts(prev => [...prev, ...data]);
+                setProducts(prev => pageNumber === 1 ? data : [...prev, ...data]);
                 setPage(prev => prev + 1);
             }
         } catch (error) {
@@ -76,9 +78,10 @@ const Home = () => {
     };
 
     useEffect(() => {
-        fetchProducts(1, searchTerm);  // Gọi lại fetch khi từ khóa tìm kiếm thay đổi
-        setProducts([]); // reset sản phẩm khi tìm kiếm mới
-      }, [searchTerm]);         
+        setProducts([]);
+        fetchProducts(1);
+    }, [searchTerm]);
+           
 
     {/* HÀM HIỆU ỨNG CHO BANNER. */}
     useEffect(() => {
@@ -147,19 +150,28 @@ const Home = () => {
                 </div>
             </div>
 
+            {/* NÚT GỌI API KHÁC ĐỂ SẮP XẾP KHÁC */}
+            <div style={{ textAlign: "center", margin: "20px 0" }}>
+                <button className="alt-sort-button" onClick={() => handleSearch(searchTerm)}>
+                    🔄 Lựa chọn khác
+                </button>
+            </div>
 
+     
             {/* DANH SÁCH CÁC SẢN PHẨM */}
-            <div className="product-list-container">
+            <div className="product-container">
             {products.length > 0 ? (
                 <div className="product-grid">
                 {products.map(product => (
-                    <div key={product.product_id} className="product-card">
-                    <img src={product.product_image} alt={product.product_name} />
-                    <h4>{product.product_name}</h4>
-                    <p>{product.product_price.toLocaleString()}₫</p>
+                    <div key={product.product_id} className="product-item">
+                    <div className="product_image">
+                        <img src={product.product_image} alt={product.product_name} />
                     </div>
-                ))}
+                    <div className="product-name">{product.product_name}</div>
+                    <div className="product-price">{product.product_price.toLocaleString()}₫</div>
                 </div>
+            ))}
+            </div>
             ) : (
                 <p>Không tìm thấy sản phẩm phù hợp.</p>
             )}

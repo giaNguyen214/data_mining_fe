@@ -56,6 +56,23 @@
   font-style: italic;
   padding-left: 8px;
 }  
+.search-button {
+  background-color: #fff;
+  color: #7A979A;
+  border: none;
+  border-radius: 20px;
+  padding: 8px 16px;
+  margin-left: 12px;
+  cursor: pointer;
+  font-family: 'Roboto', sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+.search-button:hover {
+  background-color: #5e7c7f;
+  color: #fff;
+}
 
 
 /* GIỎ HÀNG - AVATAR. */
